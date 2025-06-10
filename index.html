@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Form Multi-Step Pendataan Siswa</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #222;
+      scroll-behavior: smooth;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 20px;
+    }
+    form#multiStepForm {
+      background: linear-gradient(135deg, #ff6b6b, #feca57, #1dd1a1);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+      color: #fff;
+    }
+    section {
+      display: none;
+      animation: fadeIn 0.5s ease-in;
+    }
+    section.active {
+      display: block;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #fff;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: none;
+      box-sizing: border-box;
+      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #333;
+      color: #fff;
+    }
+    button:hover {
+      background-color: #444;
+    }
+    .form-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .form-navigation button {
+      width: 48%;
+    }
+    .back-link {
+      margin-top: 20px;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .phone-field {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+    }
+    .phone-field span {
+      background: #eee;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px 0 0 8px;
+      color: #000;
+    }
+    .phone-field input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-left: none;
+      border-radius: 0 8px 8px 0;
+    }
+    .switch-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      align-items: center;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 25px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 25px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 2.5px;
+      background-color: #fff;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+    @media (max-width:600px) {
+      body { margin: 10px; }
+      form#multiStepForm { padding: 15px; }
+      .form-navigation { flex-direction: column; }
+      .form-navigation button { width: 100%; margin-bottom: 10px; }
+      .form-navigation button:last-child { margin-bottom: 0; }
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Tambahkan atribut action dan method untuk mengintegrasikan dengan Google Apps Script -->
+  <form id="multiStepForm" action="https://script.google.com/macros/s/AKfycbzhHCv1ycAZdpq2dUCMudyzoLnq6-pLDFja4dSD1jbzCj88czY2SeVqyGoL7erszl2Q/exec" method="POST">
+    <!-- Section Identitas Siswa -->
+    <section id="identitasPeserta" class="active">
+      <h2>Form Identitas Siswa</h2>
+      <label for="jurusan">Pilihan Jurusan *</label>
+      <select id="jurusan" name="jurusan" required>
+        <option value="">-- Pilih Jurusan --</option>
+        <option value="Tata_Busana">Tata Busana</option>
+        <option value="TITL">Teknik Instalasi Tenaga Listrik</option>
+        <option value="TBSM">Teknik dan Bisnis Sepeda Motor</option>
+        <option value="TKRO">Teknik Kendaraan Ringan Otomotif</option>
+        <option value="DKV">Desain Komunikasi Visual</option>
+      </select>
+      <label for="nama_lengkap">Nama Lengkap *</label>
+      <input type="text" name="nama_lengkap" id="nama_lengkap" required/>
+      <label for="jk">Jenis Kelamin *</label>
+      <select name="jk" id="jk" required>
+        <option value="">-- Pilih Jenis Kelamin --</option>
+        <option value="Laki-Laki">Laki-Laki</option>
+        <option value="Perempuan">Perempuan</option>
+      </select>
+      <label for="nisn">NISN (10 digit)*</label>
+      <input type="number" name="nisn" id="nisn" maxlength="10" required/>
+      <label for="nik">NIK (16 digit)*</label>
+      <input type="number" name="nik" id="nik" maxlength="16" required/>
+      <label for="nokk">No. KK (16 digit)*</label>
+      <input type="number" name="nokk" id="nokk" maxlength="16" required/>
+      <label for="tempat_lahir">Tempat Lahir *</label>
+      <input type="text" name="tempat_lahir" id="tempat_lahir" required/>
+      <label for="tanggal_lahir">Tanggal Lahir *</label>
+      <input type="date" name="tanggal_lahir" id="tanggal_lahir" required/>
+      <label for="no_akte">No. Registrasi Akte Kelahiran</label>
+      <input type="text" name="no_akte" id="no_akte"/>
+      <label for="agama">Agama *</label>
+      <select name="agama" id="agama" required>
+        <option value="">-- Pilih Agama --</option>
+        <option value="Islam">Islam</option>
+        <option value="Kristen">Kristen</option>
+        <option value="Katholik">Katholik</option>
+        <option value="Hindu">Hindu</option>
+        <option value="Budha">Budha</option>
+      </select>
+      <label for="alamat_jalan">Alamat Jalan *</label>
+      <input type="text" name="alamat_jalan" id="alamat_jalan" required/>
+      <label for="rt">RT</label>
+      <input type="text" name="rt" id="rt"/>
+      <label for="rw">RW</label>
+      <input type="text" name="rw" id="rw"/>
+      <label for="desa">Nama Dusun / Desa *</label>
+      <input type="text" name="desa" id="desa" required/>
+      <a href="index.html" class="back-link">← Kembali ke Beranda</a>
+    </section>
+
+    <!-- Section Data Ayah -->
+    <section id="dataAyah">
+      <h2>Data Ayah Kandung</h2>
+      <label for="nama_ayah">Nama Ayah *</label>
+      <input type="text" name="nama_ayah" id="nama_ayah" required/>
+      <label for="nik_ayah">NIK Ayah (16 digit angka)</label>
+      <input type="text" name="nik_ayah" id="nik_ayah" maxlength="16" pattern="[0-9]{16}"/>
+      <label for="tahun_lahir_ayah">Tahun Lahir Ayah *</label>
+      <input type="text" name="tahun_lahir_ayah" id="tahun_lahir_ayah" pattern="\d{4}" maxlength="4" required placeholder="Contoh: 1975"/>
+      <label for="pendidikan_ayah">Pendidikan Ayah *</label>
+      <select name="pendidikan_ayah" id="pendidikan_ayah" required>
+        <option value="">-- Pilih --</option>
+        <option value="SD">SD</option>
+        <option value="SMP">SMP Sederajat</option>
+        <option value="SMA">SMA Sederajat</option>
+        <option value="D3">D3</option>
+        <option value="S1">S1</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
+      <label for="pekerjaan_ayah">Pekerjaan Ayah *</label>
+      <select name="pekerjaan_ayah" id="pekerjaan_ayah" required onchange="togglePenghasilanAyah()">
+        <option value="">-- Pilih --</option>
+        <option value="Petani">Petani</option>
+        <option value="Pekebun">Pekebun</option>
+        <option value="Wiraswasta">Wiraswasta</option>
+        <option value="PNS">PNS</option>
+        <option value="Lainnya">Lainnya</option>
+        <option value="Tidak Bekerja">Tidak Bekerja</option>
+        <option value="Sudah meninggal">Sudah meninggal</option>
+      </select>
+      <label for="penghasilan_ayah">Penghasilan Ayah *</label>
+      <select name="penghasilan_ayah" id="penghasilan_ayah" required>
+        <option value="">-- Pilih --</option>
+        <option value="Kurang Dari Rp. 500.000">Kurang Dari Rp. 500.000</option>
+        <option value="Rp. 500.000 - 999.999">Rp. 500.000 - 999.999</option>
+        <option value="Rp. 1.000.000 - 1.999.999">Rp. 1.000.000 - 1.999.999</option>
+        <option value="Rp. 2.000.000 - 3.999.999">Rp. 2.000.000 - 3.999.999</option>
+        <option value="Rp. 4.000.000 - 5.999.999">Rp. 4.000.000 - 5.999.999</option>
+        <option value="Lebih dari Rp 6.000.000">Lebih dari Rp 6.000.000</option>
+        <option value="Tidak Berpenghasilan">Tidak Berpenghasilan</option>
+      </select>
+    </section>
+
+    <!-- Section Data Ibu -->
+    <section id="dataIbu">
+      <h2>Data Ibu Kandung</h2>
+      <label for="nama_ibu">Nama Ibu *</label>
+      <input type="text" name="nama_ibu" id="nama_ibu" required/>
+      <label for="nik_ibu">NIK Ibu (16 digit angka)</label>
+      <input type="text" name="nik_ibu" id="nik_ibu" maxlength="16" pattern="[0-9]{16}" placeholder="16 digit angka"/>
+      <label for="tahun_lahir_ibu">Tahun Lahir Ibu *</label>
+      <input type="text" name="tahun_lahir_ibu" id="tahun_lahir_ibu" pattern="\d{4}" maxlength="4" required placeholder="Contoh: 1975"/>
+      <label for="pendidikan_ibu">Pendidikan Ibu *</label>
+      <select name="pendidikan_ibu" id="pendidikan_ibu" required>
+        <option value="">-- Pilih --</option>
+        <option value="SD">SD</option>
+        <option value="SMP">SMP Sederajat</option>
+        <option value="SMA">SMA Sederajat</option>
+        <option value="D3">D3</option>
+        <option value="S1">S1</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
+      <label for="pekerjaan_ibu">Pekerjaan Ibu *</label>
+      <select name="pekerjaan_ibu" id="pekerjaan_ibu" required onchange="togglePenghasilanIbu()">
+        <option value="">-- Pilih --</option>
+        <option value="Petani">Petani</option>
+        <option value="Pekebun">Pekebun</option>
+        <option value="Wiraswasta">Wiraswasta</option>
+        <option value="PNS">PNS</option>
+        <option value="Lainnya">Lainnya</option>
+        <option value="Tidak Bekerja">Tidak Bekerja</option>
+        <option value="Sudah meninggal">Sudah meninggal</option>
+      </select>
+      <label for="penghasilan_ibu">Penghasilan Ibu *</label>
+      <select name="penghasilan_ibu" id="penghasilan_ibu" required>
+        <option value="">-- Pilih --</option>
+        <option value="Kurang Dari Rp. 500.000">Kurang Dari Rp. 500.000</option>
+        <option value="Rp. 500.000 - 999.999">Rp. 500.000 - 999.999</option>
+        <option value="Rp. 1.000.000 - 1.999.999">Rp. 1.000.000 - 1.999.999</option>
+        <option value="Rp. 2.000.000 - 3.999.999">Rp. 2.000.000 - 3.999.999</option>
+        <option value="Rp. 4.000.000 - 5.999.999">Rp. 4.000.000 - 5.999.999</option>
+        <option value="Lebih dari Rp 6.000.000">Lebih dari Rp 6.000.000</option>
+        <option value="Tidak Berpenghasilan">Tidak Berpenghasilan</option>
+      </select>
+    </section>
+
+    <!-- Section Data Wali -->
+    <section id="dataWali">
+      <h2>Data Wali</h2>
+      <label for="tinggal_dengan_wali">Apakah Anda tinggal dengan wali? *</label>
+      <select name="tinggal_dengan_wali" id="tinggal_dengan_wali" required onchange="toggleFormWali()">
+        <option value="">-- Pilih --</option>
+        <option value="ya">Ya</option>
+        <option value="tidak">Tidak</option>
+      </select>
+      <div id="formWali" class="hidden">
+        <label for="nama_wali">Nama Wali *</label>
+        <input type="text" name="nama_wali" id="nama_wali"/>
+        <label for="nik_wali">NIK Wali (16 digit angka)</label>
+        <input type="text" name="nik_wali" id="nik_wali" maxlength="16" pattern="[0-9]{16}" placeholder="16 digit angka"/>
+        <label for="tahun_lahir_wali">Tahun Lahir Wali *</label>
+        <input type="text" name="tahun_lahir_wali" id="tahun_lahir_wali" pattern="\d{4}" maxlength="4" placeholder="Contoh: 1975"/>
+        <label for="pendidikan_wali">Pendidikan Wali *</label>
+        <select name="pendidikan_wali" id="pendidikan_wali">
+          <option value="">-- Pilih --</option>
+          <option value="SD">SD</option>
+          <option value="SMP">SMP</option>
+          <option value="SMA">SMA</option>
+          <option value="D3">D3</option>
+          <option value="S1">S1</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+        <label for="pekerjaan_wali">Pekerjaan Wali *</label>
+        <select name="pekerjaan_wali" id="pekerjaan_wali" onchange="togglePenghasilanWali()">
+          <option value="">-- Pilih --</option>
+          <option value="Petani">Petani</option>
+          <option value="Pekebun">Pekebun</option>
+          <option value="Wiraswasta">Wiraswasta</option>
+          <option value="PNS">PNS</option>
+          <option value="Lainnya">Lainnya</option>
+          <option value="Tidak Bekerja">Tidak Bekerja</option>
+          <option value="Sudah meninggal">Sudah meninggal</option>
+        </select>
+        <label for="penghasilan_wali">Penghasilan Wali *</label>
+        <select name="penghasilan_wali" id="penghasilan_wali">
+          <option value="">-- Pilih --</option>
+          <option value="Kurang Dari Rp. 500.000">Kurang Dari Rp. 500.000</option>
+          <option value="Rp. 500.000 - 999.999">Rp. 500.000 - 999.999</option>
+          <option value="Rp. 1.000.000 - 1.999.999">Rp. 1.000.000 - 1.999.999</option>
+          <option value="Rp. 2.000.000 - 3.999.999">Rp. 2.000.000 - 3.999.999</option>
+          <option value="Rp. 4.000.000 - 5.999.999">Rp. 4.000.000 - 5.999.999</option>
+          <option value="Lebih dari Rp 6.000.000">Lebih dari Rp 6.000.000</option>
+          <option value="Tidak Berpenghasilan">Tidak Berpenghasilan</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Section Form Kesejahteraan -->
+    <section id="formKesejahteraan">
+      <h2>Form Kesejahteraan</h2>
+      <label for="tempat_tinggal_kesejahteraan">Tempat Tinggal Peserta Didik *</label>
+      <select name="tempat_tinggal_kesejahteraan" id="tempat_tinggal_kesejahteraan" required>
+        <option value="">-- Pilih --</option>
+        <option value="Orang_Tua">Bersama Orang Tua</option>
+        <option value="Wali">Wali</option>
+        <option value="Kost">Kost</option>
+      </select>
+      <label for="transportasi">Moda Transportasi *</label>
+      <select name="transportasi" id="transportasi" required>
+        <option value="">-- Pilih --</option>
+        <option value="Jalan Kaki">Jalan Kaki</option>
+        <option value="Angkutan Umum">Angkutan Umum</option>
+        <option value="Ojek">Ojek</option>
+        <option value="Sepeda">Sepeda</option>
+        <option value="Sepeda Motor">Sepeda Motor</option>
+      </select>
+      <label for="anak_ke">Anak Ke Berdasarkan KK *</label>
+      <input type="number" name="anak_ke" id="anak_ke" required/>
+      <label for="jumlah_saudara">Jumlah Saudara Kandung *</label>
+      <input type="number" name="jumlah_saudara" id="jumlah_saudara" required/>
+      <label for="status_keluarga">Status Dalam Keluarga *</label>
+      <select name="status_keluarga" id="status_keluarga" required>
+        <option value="">-- Pilih --</option>
+        <option value="Anak_Kandung">Anak Kandung</option>
+        <option value="Anak_Tiri">Anak Tiri</option>
+        <option value="Anak_Angkat">Anak Angkat</option>
+      </select>
+      <label for="punya_kip">Apakah Memiliki KIP? *</label>
+      <select name="punya_kip" id="punya_kip" required onchange="toggleKip()">
+        <option value="">-- Pilih --</option>
+        <option value="Ya">Ya</option>
+        <option value="Tidak">Tidak</option>
+      </select>
+      <div id="kip_input" class="hidden">
+        <label for="no_kip">Nomor KIP</label>
+        <input type="text" name="no_kip" id="no_kip"/>
+      </div>
+      <label for="punya_kks">Apakah Punya KKS? *</label>
+      <select name="punya_kks" id="punya_kks" required onchange="toggleKks()">
+        <option value="">-- Pilih --</option>
+        <option value="Ya">Ya</option>
+        <option value="Tidak">Tidak</option>
+      </select>
+      <div id="kks_input" class="hidden">
+        <label for="no_kks">Nomor KKS</label>
+        <input type="text" name="no_kks" id="no_kks"/>
+      </div>
+      <label for="asal_sekolah">Nama Asal Sekolah Peserta Didik *</label>
+      <input type="text" name="asal_sekolah" id="asal_sekolah" placeholder="Contoh: SMP Negeri 12 Lebong" required/>
+      <label for="kecamatan_sekolah">Nama Kec. Asal Sekolah Peserta Didik *</label>
+      <input type="text" name="kecamatan_sekolah" id="kecamatan_sekolah" placeholder="Contoh: Uram Jaya" required/>
+    </section>
+
+    <!-- Section Kontak -->
+    <section id="kontak">
+      <h2>Kontak yang Bisa Dihubungi</h2>
+      <div class="switch-group">
+        <label>Apakah Anda tinggal dengan Orang Tua</label>
+        <label class="switch">
+          <input type="checkbox" id="toggleOrtu" onchange="handleToggle()">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="switch-group">
+        <label>Apakah Anda tinggal dengan Wali Murid</label>
+        <label class="switch">
+          <input type="checkbox" id="toggleWali" onchange="handleToggle()">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <label>No. WA/HP Peserta Didik *</label>
+      <div class="phone-field">
+        <span>+62</span>
+        <input type="text" name="hp_peserta" required pattern="[0-9]{10,13}" maxlength="13" placeholder="contoh: 81234567890">
+      </div>
+      <div id="kontakOrtu" class="hidden">
+        <label>No. WA/HP Orang Tua *</label>
+        <div class="phone-field">
+          <span>+62</span>
+          <input type="text" name="hp_ortu" pattern="[0-9]{10,13}" maxlength="13" placeholder="contoh: 81234567890">
+        </div>
+      </div>
+      <div id="kontakWali" class="hidden">
+        <label>No. WA/HP Wali *</label>
+        <div class="phone-field">
+          <span>+62</span>
+          <input type="text" name="hp_wali" pattern="[0-9]{10,13}" maxlength="13" placeholder="contoh: 81234567890">
+        </div>
+      </div>
+    </section>
+
+    <div class="form-navigation">
+      <button type="button" id="prevStep" disabled>Sebelumnya</button>
+      <button type="button" id="nextStep">Berikutnya</button>
+      <button type="submit" id="submitBtn" style="display:none;">Kirim</button>
+    </div>
+  </form>
+
+  <script>
+    function togglePenghasilanAyah(){
+      const pekerjaan = document.getElementById('pekerjaan_ayah').value;
+      const penghasilan = document.getElementById('penghasilan_ayah');
+      const disabled = pekerjaan === 'Tidak Bekerja' || pekerjaan === 'Sudah meninggal';
+      penghasilan.disabled = disabled;
+      if(disabled) penghasilan.value = '';
+    }
+    
+    function togglePenghasilanIbu(){
+      const pekerjaan = document.getElementById('pekerjaan_ibu').value;
+      const penghasilan = document.getElementById('penghasilan_ibu');
+      const disabled = pekerjaan === 'Tidak Bekerja' || pekerjaan === 'Sudah meninggal';
+      penghasilan.disabled = disabled;
+      if(disabled) penghasilan.value = '';
+    }
+    
+    function toggleFormWali(){
+      const pilihan = document.getElementById('tinggal_dengan_wali').value;
+      const formWali = document.getElementById('formWali');
+      if(pilihan === 'ya'){
+        formWali.classList.remove('hidden');
+        Array.from(formWali.querySelectorAll("input, select")).forEach(el => el.required = true);
+      } else {
+        formWali.classList.add('hidden');
+        Array.from(formWali.querySelectorAll("input, select")).forEach(el => { el.required = false; el.value = ""; });
+      }
+    }
+    
+    function togglePenghasilanWali(){
+      const pekerjaan = document.getElementById('pekerjaan_wali').value;
+      const penghasilan = document.getElementById('penghasilan_wali');
+      const disabled = pekerjaan === 'Tidak Bekerja' || pekerjaan === 'Sudah meninggal';
+      penghasilan.disabled = disabled;
+      if(disabled) penghasilan.value = '';
+    }
+    
+    function toggleKip(){
+      const kip = document.getElementById('punya_kip').value;
+      const kipInput = document.getElementById('kip_input');
+      if(kip === 'Ya'){
+        kipInput.classList.remove('hidden');
+        kipInput.querySelector('input').required = true;
+      } else {
+        kipInput.classList.add('hidden');
+        kipInput.querySelector('input').required = false;
+        kipInput.querySelector('input').value = '';
+      }
+    }
+    
+    function toggleKks(){
+      const kks = document.getElementById('punya_kks').value;
+      const kksInput = document.getElementById('kks_input');
+      if(kks === 'Ya'){
+        kksInput.classList.remove('hidden');
+        kksInput.querySelector('input').required = true;
+      } else {
+        kksInput.classList.add('hidden');
+        kksInput.querySelector('input').required = false;
+        kksInput.querySelector('input').value = '';
+      }
+    }
+    
+    function handleToggle(){
+      const ortu = document.getElementById('toggleOrtu').checked;
+      const wali = document.getElementById('toggleWali').checked;
+      document.getElementById('kontakOrtu').classList.add('hidden');
+      document.getElementById('kontakWali').classList.add('hidden');
+      if(ortu){
+        document.getElementById('kontakOrtu').classList.remove('hidden');
+        document.getElementById('toggleWali').checked = false;
+      }
+      else if(wali){
+        document.getElementById('kontakWali').classList.remove('hidden');
+        document.getElementById('toggleOrtu').checked = false;
+      }
+    }
+    
+    const steps = document.querySelectorAll("form section"),
+          nextBtn = document.getElementById("nextStep"),
+          prevBtn = document.getElementById("prevStep"),
+          submitBtn = document.getElementById("submitBtn"); 
+    let currentStep = 0;
+    
+    function showStep(index){
+      steps.forEach((section, idx) => {
+        section.classList.toggle("active", idx === index);
+      });
+      prevBtn.disabled = index === 0;
+      if(index === steps.length - 1){
+        nextBtn.style.display = "none";
+        submitBtn.style.display = "inline-block";
+      } else {
+        nextBtn.style.display = "inline-block";
+        submitBtn.style.display = "none";
+      }
+    }
+    
+    nextBtn.addEventListener("click", () => {
+      currentStep++;
+      showStep(currentStep);
+    });
+    
+    prevBtn.addEventListener("click", () => {
+      currentStep--;
+      showStep(currentStep);
+    });
+    
+    document.getElementById("multiStepForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const form = this;
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form)
+      })
+      .then(response => response.text())
+      .then(result => {
+        alert("Data berhasil dikirim.");
+        form.reset();
+        // Kembali ke langkah pertama setelah reset
+        currentStep = 0;
+        showStep(currentStep);
+      })
+      .catch(error => {
+        alert("Terjadi kesalahan saat pengiriman data.");
+        console.error("Error:", error);
+      });
+    });
+    
+    showStep(currentStep);
+  </script>
+</body>
+</html>
