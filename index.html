@@ -570,8 +570,8 @@
     document.getElementById("multiStepForm").addEventListener("submit", function(e){
       // Sebelum submit, hapus atribut required dari field yang tidak aktif,
       // agar validasi hanya dilakukan pada section yang terlihat.
-      document.querySelectorAll("form section:not(.active) input, form section:not(.active) select")
-        .forEach(el => el.removeAttribute("required"));
+      document.querySelectorAll("form section:not(.active) input, form section:not(.active) select, .hidden input, .hidden select")
+  .forEach(el => el.removeAttribute("required"));
       e.preventDefault();
       const form = this;
       submitBtn.disabled = true;
