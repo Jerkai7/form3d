@@ -600,5 +600,15 @@
     
     showStep(currentStep);
   </script>
+
+<script>
+// Ping Google Apps Script Web App setiap 5 menit
+setInterval(() => {
+  fetch("https://script.google.com/macros/s/AKfycbypg3IXy07sB3kx7y80zHmoDZs_tBGeiy6UbtuFq035vzHVGpuh42BlycGBwRRWr7_E/exec")
+    .then(() => console.log("Ping sent"))
+    .catch(err => console.error("Ping failed:", err));
+}, 5 * 60 * 1000); // 5 menit
+</script>
+
 </body>
 </html>
