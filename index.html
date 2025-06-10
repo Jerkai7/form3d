@@ -161,7 +161,7 @@
   </style>
 </head>
 <body>
-  <!-- Pastikan URL action menuju ke Apps Script Web App -->
+  <!-- Arahkan ke Web Apps Script melalui action -->
   <form id="multiStepForm" 
         action="https://script.google.com/macros/s/AKfycbzhHCv1ycAZdpq2dUCMudyzoLnq6-pLDFja4dSD1jbzCj88czY2SeVqyGoL7erszl2Q/exec" 
         method="POST">
@@ -281,7 +281,7 @@
         <option value="Lainnya">Lainnya</option>
       </select>
       <label for="pekerjaan_ibu">Pekerjaan Ibu *</label>
-      <select name="pekerjaan_ibu" id="pekerjaan_ibu" required onchange="togglePenghasilanIbu()">
+      <select name="pekerjaan_ibu" id="pendidikan_ibu" required onchange="togglePenghasilanIbu()">
         <option value="">-- Pilih --</option>
         <option value="Petani">Petani</option>
         <option value="Pekebun">Pekebun</option>
@@ -481,7 +481,10 @@
         Array.from(formWali.querySelectorAll("input, select")).forEach(el => el.required = true);
       } else {
         formWali.classList.add('hidden');
-        Array.from(formWali.querySelectorAll("input, select")).forEach(el => { el.required = false; el.value = ""; });
+        Array.from(formWali.querySelectorAll("input, select")).forEach(el => { 
+          el.required = false; 
+          el.value = ""; 
+        });
       }
     }
     
@@ -565,6 +568,10 @@
     });
     
     document.getElementById("multiStepForm").addEventListener("submit", function(e){
+      // Sebelum submit, hapus atribut required dari field yang tidak aktif,
+      // agar validasi hanya dilakukan pada section yang terlihat.
+      document.querySelectorAll("form section:not(.active) input, form section:not(.active) select")
+        .forEach(el => el.removeAttribute("required"));
       e.preventDefault();
       const form = this;
       submitBtn.disabled = true;
